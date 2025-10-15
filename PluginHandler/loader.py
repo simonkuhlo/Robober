@@ -1,8 +1,8 @@
 from .res.plugin_wrapper import Plugin
 import importlib
-import os
-from . import settings
+from .res.plugin_host import PluginHost
 
+plugin_host:PluginHost
 loaded_plugins:list[Plugin] = []
 
 def load_static(file_path:str) -> None:
