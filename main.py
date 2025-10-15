@@ -1,5 +1,7 @@
 import discord
 import settings
+import PluginHandler
+import asyncio
 from dotenv import get_key
 from Logger import log, color_templates as colors
 from Logger.res import DefaultLogLevels
@@ -23,6 +25,13 @@ bot = ReelBot()
 
 @bot.hybrid_command()
 async def ping(ctx):
-    await ctx.send('pong')
+    await ctx.send('pong! Log level: ' + str(settings.log_level))
 
-bot.run(get_key(".env",'BOT_TOKEN'))
+# --- Main Async Entrypoint ---
+async def main():
+    PluginHandler.on_bot_startup()
+    # Start the Discord bot (this call is blocking)
+    await bot.start(get_key(".env",'BOT_TOKEN'))
+
+if __name__ == "__main__":
+    asyncio.run(main())
