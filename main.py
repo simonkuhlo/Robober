@@ -1,12 +1,9 @@
 import discord
 import settings
 from dotenv import get_key
-from termcolor import colored
-from logger import log
-from logger.res import DefaultLogLevels
+from Logger import log, color_templates as colors
+from Logger.res import DefaultLogLevels
 from discord.ext import commands
-from colorama import just_fix_windows_console
-just_fix_windows_console()
 
 class ReelBot(commands.Bot):
     def __init__(self):
@@ -14,17 +11,17 @@ class ReelBot(commands.Bot):
         intents.message_content = True
         super().__init__(command_prefix=commands.when_mentioned_or(settings.command_trigger), intents=intents)
 
-    #async def setup_hook(self) -> None:
-        #self.tree.copy_global_to(guild=discord.Object(id=v.GUILD))
-        #await self.tree.sync(guild=discord.Object(id=v.GUILD))
+    async def setup_hook(self) -> None:
+        self.tree.copy_global_to(guild=discord.Object(id=settings.debug_server_id))
+        await self.tree.sync(guild=discord.Object(id=settings.debug_server_id))
 
     async def on_ready(self):
-        message = colored(colored('LOGGED IN', 'white', 'on_green', ['bold'])+' as '+colored(f"{self.user}", 'blue')+f' (ID: {self.user.id})')
+        message = colors.success('LOGGED IN')+' as '+colors.highlight(f"{self.user}")+f' (ID: {self.user.id})'
         log(message, DefaultLogLevels.INFO)
 
 bot = ReelBot()
 
-@bot.command()
+@bot.hybrid_command()
 async def ping(ctx):
     await ctx.send('pong')
 
