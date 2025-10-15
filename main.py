@@ -5,8 +5,6 @@ from termcolor import colored
 from logger import log
 from logger.res import DefaultLogLevels
 from discord.ext import commands
-from colorama import just_fix_windows_console
-just_fix_windows_console()
 
 class ReelBot(commands.Bot):
     def __init__(self):
