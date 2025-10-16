@@ -1,19 +1,20 @@
 from fastapi import FastAPI
 from threading import Thread
+from PluginResources.plugin import Plugin
 import uvicorn
 import settings
 
 # --- FastAPI Web Server Setup ---
 app = FastAPI()
-
+plugin_ref:Plugin
 
 @app.get("/")
 async def read_root():
     return {"message": "Discord bot web interface is running."}
 
-
 @app.get("/bot-status")
 async def bot_status():
+    bot = plugin_ref.access_share.bot
     # Example: return the current bot latency
     return {"latency_ms": round(bot.latency * 1000)}
 
@@ -35,5 +36,6 @@ def run_api():
 
 def on_startup() -> None:
     # Start FastAPI in a background thread
+    print("Starting up...")
     api_thread = Thread(target=run_api, daemon=True)
     api_thread.start()

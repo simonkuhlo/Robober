@@ -1,14 +1,11 @@
-# Plugin file template for Backend version 0
-
+from PluginResources.plugin import Plugin
 from . import main
 
-#INFO
-plugin_id:str = "WEBINTERFACE"
-plugin_name:str = "Webinterface"
-plugin_description:str = "Webinterface"
-plugin_version:int = 0
-used_backend_version:int = 0
+plugin = Plugin("WEBINTERFACE")
+plugin.name = "Webinterface"
+plugin.desc = "Webinterface"
+plugin.version = 0
+plugin.used_backend_version = 0
 
-#Gets called on Application Startup
-def startup_hook() -> None:
-    main.on_startup()
+main.plugin_ref = plugin
+plugin.starting.connect(main.on_startup)
