@@ -1,6 +1,6 @@
-from PluginResources.access_share import AccessShare
-from PluginResources.settings_connector import SettingsConnector
-from reelbot import ReelBot
+from SimonsPluginResources.Main.access_share import AccessShare
+from SimonsPluginResources.Main.settings_connector import SettingsConnector
+from Main.reelbot import ReelBot
 from .res.plugin_host import PluginHost
 from Plugins.WebInterface import plugin as webinterface
 

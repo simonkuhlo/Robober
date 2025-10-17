@@ -1,0 +1,23 @@
+header {
+  display: flex;
+    flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+    height: 70px;
+  background-color: #f0f0f0;
+}
+
+header img {
+  height: 100%;
+}
+
+header h1 {
+  flex-grow: 1;
+  text-align: center;
+  margin: 0;
+}
+
+header select {
+  height: 50px;
+}

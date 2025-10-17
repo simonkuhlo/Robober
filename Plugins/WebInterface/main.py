@@ -1,11 +1,14 @@
 from fastapi import FastAPI
 from threading import Thread
-from PluginResources.plugin import Plugin
+from fastapi.staticfiles import StaticFiles
+from SimonsPluginResources.Main.plugin import Plugin
+from .visual.main import router
 import uvicorn
 import settings
 
 # --- FastAPI Web Server Setup ---
 app = FastAPI()
+app.include_router(router, prefix="/visual", tags=["visual"])
 plugin_ref:Plugin
 
 @app.get("/")
@@ -36,6 +39,5 @@ def run_api():
 
 def on_startup() -> None:
     # Start FastAPI in a background thread
-    print("Starting up...")
     api_thread = Thread(target=run_api, daemon=True)
     api_thread.start()

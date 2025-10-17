@@ -1,5 +1,5 @@
-from PluginResources.plugin import Plugin
-from PluginResources.access_share import AccessShare
+from SimonsPluginResources.Main.plugin import Plugin
+from SimonsPluginResources.Main.access_share import AccessShare
 
 class PluginHost:
 

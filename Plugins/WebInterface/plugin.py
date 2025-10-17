@@ -1,4 +1,4 @@
-from PluginResources.plugin import Plugin
+from SimonsPluginResources.Main import Plugin
 from . import main
 
 plugin = Plugin("WEBINTERFACE")
