@@ -2,13 +2,23 @@ from fastapi import FastAPI
 from threading import Thread
 from fastapi.staticfiles import StaticFiles
 from SimonsPluginResources.Main.plugin import Plugin
-from .visual.main import router
+from .visual.main import router as visual_router
+from .bot_api.main import router as bot_api_router
 import uvicorn
-import settings
+import core_settings
+import os
+
+# Get the directory where the current file (e.g., main.py) is located
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+# Construct the path to the static directory relative to BASE_DIR
+static_dir_path = os.path.join(BASE_DIR, "visual/static")
 
 # --- FastAPI Web Server Setup ---
 app = FastAPI()
-app.include_router(router, prefix="/visual", tags=["visual"])
+app.mount("/visual/static", StaticFiles(directory=static_dir_path), name="static")
+app.include_router(visual_router, prefix="/visual", tags=["visual"])
+app.include_router(bot_api_router, prefix="/botapi", tags=["botapi"])
+
 plugin_ref:Plugin
 
 @app.get("/")
@@ -23,13 +33,13 @@ async def bot_status():
 
 @app.get("/loglevel")
 async def get_status():
-    return settings.log_level
+    return core_settings.log_level
 
 @app.post("/loglevel")
 async def set_loglevel(update: int):
     # Update the shared variable
-    settings.log_level = update
-    return {"message": "Status updated", "new_status": settings.log_level}
+    core_settings.log_level = update
+    return {"message": "Status updated", "new_status": core_settings.log_level}
 
 
 # Function to run the FastAPI server in a separate thread
@@ -38,6 +48,5 @@ def run_api():
 
 
 def on_startup() -> None:
-    # Start FastAPI in a background thread
     api_thread = Thread(target=run_api, daemon=True)
     api_thread.start()

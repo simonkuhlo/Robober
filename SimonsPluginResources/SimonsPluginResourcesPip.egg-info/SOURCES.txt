@@ -1,9 +1,10 @@
 pyproject.toml
-PluginResources/__init__.py
-PluginResources/access_share.py
-PluginResources/plugin.py
-PluginResources/plugin_signal.py
-PluginResources/settings_connector.py
+Main/__init__.py
+Main/access_share.py
+Main/plugin.py
+Main/plugin_signal.py
+Main/reelbot.py
+Main/settings_connector.py
 SimonsPluginResourcesPip.egg-info/PKG-INFO
 SimonsPluginResourcesPip.egg-info/SOURCES.txt
 SimonsPluginResourcesPip.egg-info/dependency_links.txt

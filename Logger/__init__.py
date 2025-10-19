@@ -10,3 +10,4 @@ class Logger:
         print(logmessage)
 
 logger:Logger = Logger()
+DefaultLogLevels = DefaultLogLevels

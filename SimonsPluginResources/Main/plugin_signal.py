@@ -19,7 +19,7 @@ class Signal:
             hints = get_type_hints(handler)
 
             # NOTE vvvv Delete candidate, might not be useful / wanted
-            # Validate argument count
+            # To Validate argument count
             if len(sig.parameters) != len(self.arg_types):
                 raise TypeError(f"{handler.__name__} has wrong number of arguments; expected {len(self.arg_types)}")
             # NOTE ^^^^
