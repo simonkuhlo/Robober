@@ -9,6 +9,8 @@ class ChannelClonerPlugin(Plugin):
         self.version = 0
         self.used_backend_version = 0
         self.cogs = [ChannelCloner]
-        self.own_settings = {"channelcloner.origin_channel.id" : "963376060672647169"}
+        self.own_settings = {"channelcloner.origin_channel.id" : "963376060672647169",
+                             "channelcloner.temp_channel_category.id": "1361792521226948650"
+                             }
 
 plugin = ChannelClonerPlugin()
