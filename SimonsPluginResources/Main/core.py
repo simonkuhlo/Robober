@@ -2,6 +2,7 @@ import asyncio
 from threading import Thread
 
 from Plugins.ChannelCloner.plugin import ChannelCloner as ChannelClonerCog
+from main import plugin_host
 from .access_share import AccessShare
 from .plugin_host import PluginHost
 from .settings import SettingsManager
@@ -15,6 +16,7 @@ class CoreApp:
         self.bot.signal_ready.connect(self.on_bot_setup)
         self.access_share = AccessShare(self.settings, self.bot)
         self.plugin_host:PluginHost = PluginHost(self.access_share)
+        self.bot.system_cogs.extend(self.plugin_host.system_cogs)
         self.bot_token: str = None
         self.webinterface_thread:Thread = Thread(target=self.run_webinterface, daemon=True)
         self.bot_thread:Thread = Thread(target=self.run_bot)
