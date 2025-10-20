@@ -1,7 +1,8 @@
+from discord import VoiceChannel
 from discord.ext import commands
-from SimonsPluginResources.Main.settings import SettingsManager
 from SimonsPluginResources.Main.access_share import AccessShare
 from SimonsPluginResources.Main.plugin_cog import PluginCog
+from .Views.channel_editor import ChannelEditorView
 
 class ChannelCloner(PluginCog):
     def __init__(self, bot, access_share:AccessShare):
@@ -27,7 +28,8 @@ class ChannelCloner(PluginCog):
             if after.channel != before.channel:
                 if after.channel.id == origin_channel_id:
                     print(member.name, "aka", member.nick, "connected to origin channel. Current users:", len(after.channel.members))
-                    category_channel = self.access_share.bot.get_channel(temp_channel_category_id)
-                    new_channel = await category_channel.create_voice_channel(member.name)
+                    category_channel = self.bot.get_channel(temp_channel_category_id)
+                    new_channel:VoiceChannel = await category_channel.create_voice_channel(member.name)
                     await member.move_to(new_channel)
+                    await new_channel.send("", view=ChannelEditorView())
                     print("Channel cloned.")
