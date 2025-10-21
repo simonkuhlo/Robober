@@ -2,7 +2,9 @@ from discord import VoiceChannel
 from discord.ext import commands
 from SimonsPluginResources.Main.access_share import AccessShare
 from SimonsPluginResources.Main.plugin_cog import PluginCog
-from .Views.channel_editor import ChannelEditorView
+from .Res.channel_authority import ChannelAuthority
+from Plugins.ChannelCloner.Res.Views.channel_editor import ChannelEditorView
+from . import channel_authority_manager as cam
 
 class ChannelCloner(PluginCog):
     def __init__(self, bot, access_share:AccessShare):
@@ -22,8 +24,16 @@ class ChannelCloner(PluginCog):
                     if before.channel.id != origin_channel_id:
                         print(member.name, "aka", member.nick, "left temp channel. Current users:", len(before.channel.members))
                         if len(before.channel.members) == 0:
+                            try:
+                                cam.delete_channel(before.channel)
+                            except:
+                                pass
                             await before.channel.delete()
                             print("Channel deleted.")
+                        else:
+                            if cam.is_user_owner(before.channel.id, member.id):
+                                cam.set_owner(before.channel.id, None)
+                                await before.channel.send("The owner of this channel left. Click to claim ownership")
         if after.channel is not None:
             if after.channel != before.channel:
                 if after.channel.id == origin_channel_id:
@@ -31,5 +41,7 @@ class ChannelCloner(PluginCog):
                     category_channel = self.bot.get_channel(temp_channel_category_id)
                     new_channel:VoiceChannel = await category_channel.create_voice_channel(member.name)
                     await member.move_to(new_channel)
-                    await new_channel.send("", view=ChannelEditorView())
+                    authority = ChannelAuthority(member.id)
+                    cam.add_channel(new_channel.id, authority)
+                    await new_channel.send("", view=ChannelEditorView(new_channel))
                     print("Channel cloned.")
