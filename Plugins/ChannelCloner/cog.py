@@ -40,6 +40,9 @@ class ChannelCloner(PluginCog):
                     print(member.name, "aka", member.nick, "connected to origin channel. Current users:", len(after.channel.members))
                     category_channel = self.bot.get_channel(temp_channel_category_id)
                     new_channel:VoiceChannel = await category_channel.create_voice_channel(member.name)
+                    overwrite = new_channel.overwrites_for(new_channel.guild.default_role)
+                    overwrite.connect = True
+                    await new_channel.set_permissions(new_channel.guild.default_role, overwrite=overwrite)
                     await member.move_to(new_channel)
                     authority = ChannelAuthority(member.id)
                     cam.add_channel(new_channel.id, authority)

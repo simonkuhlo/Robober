@@ -1,10 +1,4 @@
-from typing import Optional, Sequence
-
 import discord
-from discord.abc import Snowflake
-from discord.ext.commands import Cog
-from discord.utils import MISSING
-
 import core_settings
 from Logger import logger, color_templates as colors
 from Logger.res import DefaultLogLevels
