@@ -1,5 +1,7 @@
 import discord
 from discord import VoiceChannel
+
+from .channel_access_view import ChannelAccessView
 from .user_limit_modal import UserLimitModal
 from ... import channel_authority_manager as cam
 
@@ -51,7 +53,7 @@ class AccessSettingsSelect(discord.ui.Select):
             case "Set User Limit":
                 await interaction.response.send_modal(UserLimitModal(target_channel))
             case "Accept User (Temporary)":
-                await interaction.response.send_message("Puts user on temporary Whitelist", ephemeral=True)
+                await interaction.response.send_message("Puts user on temporary Whitelist", view=ChannelAccessView(interaction.channel), ephemeral=True)
             case "Reject User (Temporary)":
                 await interaction.response.send_message("Puts user on temporary Blacklist", ephemeral=True)
             case _:
