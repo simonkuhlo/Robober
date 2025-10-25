@@ -10,6 +10,7 @@ class ChannelEditorView(discord.ui.View):
 
 class AcceptRejectSelect(discord.ui.Select):
     def __init__(self, target_channel:VoiceChannel):
+        pass
 
 class WhitelistUserSelectView(discord.ui.View):
     def __init__(self, parent_view:ChannelEditorView):

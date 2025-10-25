@@ -7,7 +7,7 @@ class UserLimitModal(Modal):
         super().__init__(title="Enter Amount")
         self.amount_input = TextInput(
             label="Amount",
-            placeholder="Enter a number",
+            placeholder="Enter a number. 0 is unlimited",
             required=True
         )
         self.voice_channel = voice_channel

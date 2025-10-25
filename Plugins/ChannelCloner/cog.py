@@ -3,7 +3,7 @@ from discord.ext import commands
 from SimonsPluginResources.Main.access_share import AccessShare
 from SimonsPluginResources.Main.plugin_cog import PluginCog
 from .Res.channel_authority import ChannelAuthority
-from Plugins.ChannelCloner.Res.Views.channel_editor import ChannelEditorView
+from Plugins.ChannelCloner.Res.Views.access_editor import ChannelEditorView
 from . import channel_authority_manager as cam
 
 class ChannelCloner(PluginCog):

@@ -13,15 +13,15 @@ class CoreApp:
     def __init__(self):
         self.settings = SettingsManager()
         self.bot = ReelBot()
-        self.bot.signal_ready.connect(self.on_bot_setup)
+        self.bot.signal_ready.connect(self.on_bot_ready)
         self.access_share = AccessShare(self.settings, self.bot)
         self.plugin_host:PluginHost = PluginHost(self.access_share)
         self.bot.system_cogs.extend(self.plugin_host.system_cogs)
         self.bot_token: str = None
         self.webinterface_thread:Thread = Thread(target=self.run_webinterface, daemon=True)
-        self.bot_thread:Thread = Thread(target=self.run_bot)
+        self.bot_thread:Thread = Thread(target=self.run_bot, daemon=True)
 
-    def on_bot_setup(self):
+    def on_bot_ready(self):
         #self.plugin_host.reload_cogs()
         pass
 

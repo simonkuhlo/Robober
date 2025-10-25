@@ -18,8 +18,7 @@ class AccessSettingsSelect(discord.ui.Select):
         options = [
             discord.SelectOption(label=self.get_channel_lock_label_text() , emoji=self.get_channel_lock_label_emoji(), description="Lock / Unlock Channel"),
             discord.SelectOption(label="Set User Limit", emoji="👥", description="Set a limit for how many users can join this channel"),
-            discord.SelectOption(label="Accept User (Temporary)", emoji="✅", description="Channel needs to be locked first"),
-            discord.SelectOption(label="Reject User (Temporary)", emoji="❌", description="Members on this list cannot access your channel"),
+            discord.SelectOption(label="Accept / Reject User", emoji="✅", description="Grant a certain member access to the channel, or remove it for someone"),
         ]
         super().__init__(placeholder="Access Settings", options=options)
 
