@@ -19,7 +19,7 @@ class CoreApp:
         self.bot.system_cogs.extend(self.plugin_host.system_cogs)
         self.bot_token: str = None
         self.webinterface_thread:Thread = Thread(target=self.run_webinterface, daemon=True)
-        self.bot_thread:Thread = Thread(target=self.run_bot)
+        self.bot_thread:Thread = Thread(target=self.run_bot, daemon=True)
 
     def on_bot_setup(self):
         #self.plugin_host.reload_cogs()
