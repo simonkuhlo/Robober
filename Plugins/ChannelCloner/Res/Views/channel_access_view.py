@@ -40,6 +40,7 @@ class UserSelect(discord.ui.UserSelect):
 
     async def callback(self, interaction: discord.Interaction):
         selected_users = self.values
+        # If mode is selected, do action instantly, else cache selection and wait for mode select
         mention_string:str = ""
         for selected_user in selected_users:
             mention_string += ", " + selected_user.mention

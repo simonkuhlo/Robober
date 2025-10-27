@@ -82,3 +82,46 @@ class AccessSettingsSelect(discord.ui.Select):
     def is_channel_locked(self) -> bool:
         overwrite = self.target_channel.overwrites_for(self.target_channel.guild.default_role)
         return not overwrite.connect
+
+class CustomizeSettingSelect(discord.ui.Select):
+    def __init__(self, target_channel:VoiceChannel, parent_view:discord.ui.View):
+        self.target_channel: VoiceChannel = target_channel
+        self.parent_view: discord.ui.View = parent_view
+        self.current_lock_label_text: str = ""
+        options = [
+            discord.SelectOption(label="Set channel name", emoji="👥", description="Set a limit for how many users can join this channel"),
+            discord.SelectOption(label="Set channel status", emoji="✅", description="Grant or reject access to the channel for specific users"),
+        ]
+        super().__init__(placeholder="Access Settings", options=options)
+
+    async def callback(self, interaction: discord.Interaction):
+        value = self.values[0]
+        target_channel = self.target_channel
+        if not cam.get_channel_authority(target_channel.id):
+            await interaction.response.send_message(
+                "This channel currently has no owner. Do you want to claim ownership?", ephemeral=True
+            )
+            await interaction.message.edit(view=self.parent_view)
+            return
+
+        if not cam.is_user_elevated(target_channel.id, interaction.user.id):
+            await interaction.response.send_message(
+                "Error! You do not have elevated privileges in this channel. Please contact the current owner: owner_name",
+                ephemeral=True,
+            )
+            await interaction.message.edit(view=self.parent_view)
+            return
+
+        match value:
+            case self.current_lock_label_text:
+                await self.switch_channel_lock_state()
+                if self.is_channel_locked():
+                    await interaction.response.send_message(f"Channel Locked.", ephemeral=True)
+                else:
+                    await interaction.response.send_message(f"Channel Unlocked.", ephemeral=True)
+            case "Set User Limit":
+                await interaction.response.send_modal(UserLimitModal(target_channel))
+            case "Accept / Reject User":
+                await interaction.response.send_message("Puts user on temporary Whitelist", view=ChannelAccessView(interaction.channel), ephemeral=True)
+
+        await interaction.message.edit(view=ChannelEditorView(self.target_channel))
