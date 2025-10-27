@@ -3,35 +3,42 @@ import discord
 from discord import VoiceChannel
 
 class AcceptMode(Enum):
-    ACCEPT = 1
-    REJECT = 2
-    RESET = 3
+    ACCEPT = "✅ Accept"
+    REJECT = "❌ Reject"
+    RESET = "⚪ Clear Permissions"
 
 class ChannelAccessView(discord.ui.View):
     def __init__(self, target_channel:VoiceChannel):
         super().__init__(timeout=None)
         self.target_channel = target_channel
         self.accept_mode:AcceptMode = AcceptMode.ACCEPT
-        self.add_item(AcceptRejectSelect(self))
-        self.add_item(UserSelect(self))
+        self.add_item(AcceptRejectSelect())
+        #self.add_item(UserSelect(self))
 
 class AcceptRejectSelect(discord.ui.Select):
-    def __init__(self, parent_view:ChannelAccessView):
-        self.parent_view = parent_view
+    def __init__(self):
         options = [
             discord.SelectOption(label="Accept User", emoji="✅",
                                  description=""),
             discord.SelectOption(label="Reject User", emoji="❌",
+                                 description=""),
+            discord.SelectOption(label="Clear User", emoji="⚪",
                                  description="")
         ]
         super().__init__(placeholder="Access Settings", options=options)
 
     async def callback(self, interaction: discord.Interaction):
-        pass
+        selected_option = self.values[0]
+        mode: AcceptMode = AcceptMode.RESET
+        match selected_option:
+            case "Accept User":
+                mode = AcceptMode.ACCEPT
+            case "Reject User":
+                mode = AcceptMode.REJECT
+        await interaction.response.send_message(f"You selected {mode.value}.")
 
 class UserSelect(discord.ui.UserSelect):
-    def __init__(self, parent_view:ChannelAccessView):
-        self.parent_view = parent_view
+    def __init__(self, mode: AcceptMode):
         super().__init__(
             placeholder="Select a user",
             min_values=1,
