@@ -54,25 +54,8 @@ class PluginHost:
         pass
 
     def reload_cogs(self) -> None:
-        logger.log("Reloading Cogs", DefaultLogLevels.INFO)
-        bot = self.access_share.bot
-        #for cog_name in self.access_share.bot.cogs.keys():
-            #future = asyncio.run_coroutine_threadsafe(bot.remove_cog(cog_name), bot.loop)
-            #future.result(timeout=3)
         for plugin in self.loaded_plugins:
-            logger.log(f"Reloading Cogs for Plugin: {plugin.name}", DefaultLogLevels.INFO)
-            for Cog in plugin.cogs:
-                try:
-                    logger.log(f"Reloading Cogs for Plugin: {plugin.name} Cog: {Cog.__cog_name__}", DefaultLogLevels.INFO)
-
-                    cog_instance = Cog(bot, self.access_share)
-                    future = asyncio.run_coroutine_threadsafe(bot.add_cog(cog_instance), bot.loop)
-                    future.result(timeout=3)
-                except Exception as e:
-                    logger.log(f"Error while reloading Cog: {e}", DefaultLogLevels.INFO)
-                except TimeoutError as e:
-                    logger.log(f"Error while reloading Cog: {e}", DefaultLogLevels.INFO)
-            logger.log(f"Reloaded Cogs for Plugin: {plugin.name}", DefaultLogLevels.INFO)
+            plugin.reload_cogs()
 
 class PluginHostCog(commands.Cog):
     def __init__(self, bot, plugin_host:PluginHost):

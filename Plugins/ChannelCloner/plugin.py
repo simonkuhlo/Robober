@@ -1,9 +1,10 @@
+from SimonsPluginResources.Main import AccessShare
 from SimonsPluginResources.Main import Plugin
 from .cog import ChannelCloner
 
 class ChannelClonerPlugin(Plugin):
-    def __init__(self):
-        super().__init__("CHANNELCLONER")
+    def __init__(self, access_share: AccessShare):
+        super().__init__("CHANNELCLONER", access_share)
         self.name = "Channelcloner"
         self.desc = "Channelcloner"
         self.version = 0
@@ -13,4 +14,5 @@ class ChannelClonerPlugin(Plugin):
                              "channelcloner.temp_channel_category.id": "1361792521226948650"
                              }
 
-plugin = ChannelClonerPlugin()
+def get_plugin(access_share: AccessShare):
+    return ChannelClonerPlugin(access_share)

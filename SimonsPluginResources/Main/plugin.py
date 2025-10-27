@@ -1,5 +1,6 @@
 import enum
 from typing import final
+from discord.ext.commands import Cog
 from .access_share import AccessShare
 from .plugin_cog import PluginCog
 from .plugin_signal import Signal
