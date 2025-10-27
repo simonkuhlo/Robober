@@ -1,5 +1,7 @@
 import discord
 from discord import VoiceChannel
+
+from .channel_access_view import ChannelAccessView
 from .user_limit_modal import UserLimitModal
 from ... import channel_authority_manager as cam
 
@@ -18,7 +20,8 @@ class AccessSettingsSelect(discord.ui.Select):
         options = [
             discord.SelectOption(label=self.get_channel_lock_label_text() , emoji=self.get_channel_lock_label_emoji(), description="Lock / Unlock Channel"),
             discord.SelectOption(label="Set User Limit", emoji="👥", description="Set a limit for how many users can join this channel"),
-            discord.SelectOption(label="Accept / Reject User", emoji="✅", description="Grant a certain member access to the channel, or remove it for someone"),
+            discord.SelectOption(label="Accept / Reject User", emoji="✅", description="Grant or reject access to the channel for specific users"),
+            discord.SelectOption(label="Friends override Lock", emoji="❤️", description="Friends can join this channel even if it is locked")
         ]
         super().__init__(placeholder="Access Settings", options=options)
 
@@ -49,10 +52,10 @@ class AccessSettingsSelect(discord.ui.Select):
                     await interaction.response.send_message(f"Channel Unlocked.", ephemeral=True)
             case "Set User Limit":
                 await interaction.response.send_modal(UserLimitModal(target_channel))
-            case "Accept User (Temporary)":
-                await interaction.response.send_message("Puts user on temporary Whitelist", ephemeral=True)
-            case "Reject User (Temporary)":
-                await interaction.response.send_message("Puts user on temporary Blacklist", ephemeral=True)
+            case "Accept / Reject User":
+                await interaction.response.send_message("Puts user on temporary Whitelist", view=ChannelAccessView(interaction.channel), ephemeral=True)
+            case "Friends override Lock":
+                await interaction.response.send_message("Friend System module not enabled in Bot base.", ephemeral=True)
             case _:
                 await interaction.response.send_message("Unknown command", ephemeral=True)
 
