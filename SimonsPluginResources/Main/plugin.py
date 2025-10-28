@@ -1,6 +1,6 @@
 import asyncio
 import enum
-from typing import final
+from typing import final, Type
 
 from discord.ext import commands
 from discord.ext.commands import Cog
@@ -26,7 +26,7 @@ class Plugin:
         self.version: int = 0
         self.needs_backend_version: int = 0
         #---META---
-        self.cogs: list[PluginCog] = []
+        self.cogs: list[Type[PluginCog]] = []
         self.own_settings: dict[str, str] = {}
         self.access_share: AccessShare = _access_share
         self.status: Status = Status.NOT_STARTED
@@ -35,22 +35,22 @@ class Plugin:
 
     @final
     def start(self):
-        self._on_start()
+        self._start()
         if self.check_bot_ready():
             self.reload_cogs()
         self.status = Status.STARTED
         self.started.emit()
 
-    def _on_start(self):
+    def _start(self):
         pass
 
     @final
     def stop(self):
-        self._on_stop()
+        self._stop()
         self.status = Status.STOPPED
         self.stopped.emit()
 
-    def _on_stop(self):
+    def _stop(self):
         self.unload_cogs()
 
     def check_bot_ready(self) -> bool:
