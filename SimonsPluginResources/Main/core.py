@@ -31,7 +31,7 @@ class CoreApp:
 
     def run_webinterface(self) -> None:
         asyncio.set_event_loop(asyncio.new_event_loop())
-        webinterface.run_api()
+        webinterface.run_api(self.plugin_host)
 
     def start(self) -> None:
         self.plugin_host.start()

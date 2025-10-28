@@ -1,9 +1,13 @@
 from fastapi import FastAPI
+from fastapi.responses import RedirectResponse
 from threading import Thread
 from fastapi.staticfiles import StaticFiles
-from SimonsPluginResources.Main.plugin import Plugin
+from SimonsPluginResources.Main.plugin_host import PluginHost
+from SimonsPluginResources.Main.access_share import AccessShare
+from . import bot_api
 from .visual.main import router as visual_router
 from .bot_api.main import router as bot_api_router
+from .bot_api import main as bot_api
 import uvicorn
 import core_settings
 import os
@@ -14,20 +18,19 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 static_dir_path = os.path.join(BASE_DIR, "visual/static")
 
 # --- FastAPI Web Server Setup ---
+plugin_host:PluginHost
 app = FastAPI()
 app.mount("/visual/static", StaticFiles(directory=static_dir_path), name="static")
-app.include_router(visual_router, prefix="/visual", tags=["visual"])
-app.include_router(bot_api_router, prefix="/botapi", tags=["botapi"])
-
-plugin_ref:Plugin
+app.include_router(visual_router)
+app.include_router(bot_api_router)
 
 @app.get("/")
 async def read_root():
-    return {"message": "Discord bot web interface is running."}
+    return RedirectResponse(url="/visual", status_code=308)
 
 @app.get("/bot-status")
 async def bot_status():
-    bot = plugin_ref.access_share.bot
+    bot = plugin_host.access_share.bot
     # Example: return the current bot latency
     return {"latency_ms": round(bot.latency * 1000)}
 
@@ -43,8 +46,11 @@ async def set_loglevel(update: int):
 
 
 # Function to run the FastAPI server in a separate thread
-def run_api():
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+def run_api(current_plugin_host: PluginHost):
+    global plugin_host
+    plugin_host = current_plugin_host
+    bot_api.plugin_host = plugin_host
+    uvicorn.run(app, host="localhost", port=8000)
 
 
 def on_startup() -> None:
