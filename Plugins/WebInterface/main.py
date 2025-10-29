@@ -5,6 +5,7 @@ from fastapi.staticfiles import StaticFiles
 from SimonsPluginResources.environment import Environment
 from .visual.main import router as visual_router
 from .bot_api.main import router as bot_api_router
+from .bot_api import main as bot_api
 import uvicorn
 import core_settings
 import os
@@ -41,14 +42,13 @@ async def set_loglevel(update: int):
     core_settings.log_level = update
     return {"message": "Status updated", "new_status": core_settings.log_level}
 
-
 # Function to run the FastAPI server in a separate thread
 def run_webinterface():
     uvicorn.run(app, host="localhost", port=8000)
 
-
 def on_startup(current_environment: Environment) -> None:
     global environment
     environment = current_environment
+    bot_api.environment = environment
     api_thread = Thread(target=run_webinterface, daemon=True)
     api_thread.start()
