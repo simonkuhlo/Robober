@@ -1,7 +1,6 @@
 from enum import Enum
 import discord
 from discord import VoiceChannel
-from ... import channel_access_worker
 
 class AcceptMode(Enum):
     ACCEPT = "✅ Accept"

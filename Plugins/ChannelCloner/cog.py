@@ -1,14 +1,14 @@
 from discord import VoiceChannel
 from discord.ext import commands
-from SimonsPluginResources.Main.access_share import AccessShare
-from SimonsPluginResources.Main.plugin_cog import PluginCog
+from SimonsPluginResources.environment import Environment
+from SimonsPluginResources.plugin_cog import PluginCog
 from .Res.channel_authority import ChannelAuthority
-from Plugins.ChannelCloner.Res.Views.access_editor import ChannelEditorView
+from .Res.Views.access_editor import ChannelEditorView
 from . import channel_authority_manager as cam
 
 class ChannelCloner(PluginCog):
-    def __init__(self, bot, access_share:AccessShare):
-        super().__init__(bot, access_share)
+    def __init__(self, environment: Environment):
+        super().__init__(environment)
 
     @commands.hybrid_command()
     async def hello(self, ctx):
@@ -16,8 +16,8 @@ class ChannelCloner(PluginCog):
 
     @commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):
-        origin_channel_id:int = int(self.access_share.settings.get_setting("channelcloner.origin_channel.id"))
-        temp_channel_category_id:int = int(self.access_share.settings.get_setting("channelcloner.temp_channel_category.id"))
+        origin_channel_id:int = int(self.environment.settings.get_setting("channelcloner.origin_channel.id"))
+        temp_channel_category_id:int = int(self.environment.settings.get_setting("channelcloner.temp_channel_category.id"))
         if before.channel is not None:
             if before.channel != after.channel:
                 if before.channel.category.id == temp_channel_category_id:
@@ -38,7 +38,7 @@ class ChannelCloner(PluginCog):
             if after.channel != before.channel:
                 if after.channel.id == origin_channel_id:
                     print(member.name, "aka", member.nick, "connected to origin channel. Current users:", len(after.channel.members))
-                    category_channel = self.bot.get_channel(temp_channel_category_id)
+                    category_channel = self.environment.bot.get_channel(temp_channel_category_id)
                     new_channel:VoiceChannel = await category_channel.create_voice_channel(member.name)
                     overwrite = new_channel.overwrites_for(new_channel.guild.default_role)
                     overwrite.connect = True

@@ -1,10 +1,10 @@
-from SimonsPluginResources.Main.access_share import AccessShare
-from SimonsPluginResources.Main.plugin_host import PluginHost
-from SimonsPluginResources.Main.settings import SettingsManager
+from SimonsPluginResources.SimonsPluginResources.access_share import AccessShare
+from SimonsPluginResources.SimonsPluginResources.plugin_host import PluginHost
+from SimonsPluginResources.SimonsPluginResources.settings import SettingsManager
 import core_settings
 import asyncio
 from dotenv import get_key
-from Main.reelbot import ReelBot
+from SimonsPluginResources.reelbot import ReelBot
 
 settings = SettingsManager()
 bot = ReelBot()

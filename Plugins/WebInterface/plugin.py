@@ -1,19 +1,20 @@
-from SimonsPluginResources.Main import AccessShare
-from SimonsPluginResources.Main import Plugin
+from SimonsPluginResources.environment import Environment
+from SimonsPluginResources.plugin import Plugin
+from . import main
 
-class ChannelClonerPlugin(Plugin):
-    def __init__(self, access_share: AccessShare):
-        super().__init__("WEBINTERFACE", access_share)
-        self.name = "Webinterface"
-        self.desc = "Webinterface"
-        self.version = 0
-        self.used_backend_version = 0
-        self.own_settings = {
-                            "webinterface.host_address" : "localhost",
-                             }
+class WebInterfacePlugin(Plugin):
+    def __init__(self, environment: Environment):
+        super().__init__(_plugin_id = "WEBINTERFACE",
+                         _environment = environment,
+                         _name = "Webinterface",
+                         _description = "Webinterface",
+                         _version = 0,
+                         _used_host_version = 0,
+                         _own_settings = {"webinterface.host_address" : "localhost"}
+                         )
 
     def _start(self) -> None:
-        pass
+        main.on_startup(self.environment)
 
-def get_plugin(access_share: AccessShare):
-    return ChannelClonerPlugin(access_share)
+def get_plugin(environment: Environment):
+    return WebInterfacePlugin(environment)

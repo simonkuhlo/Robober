@@ -1,0 +1,30 @@
+{% extends "base.j2" %}
+
+{% block main %}
+    Status
+    <button>
+    Start
+    </button>
+    <button onclick="stop_bot()">
+    Stop
+    </button>
+    <button onclick="restart_bot()">Restart</button>
+    <script>
+    function restart_bot() {
+      fetch("/bot/clear")
+        .then(response => response.text())
+        .then(data => {
+          console.log(data); // Handle the server response here
+        })
+        .catch(error => console.error(error));
+    }
+    function stop_bot() {
+      fetch("/bot/stop")
+        .then(response => response.text())
+        .then(data => {
+          console.log(data); // Handle the server response here
+        })
+        .catch(error => console.error(error));
+    }
+    </script>
+{% endblock %}

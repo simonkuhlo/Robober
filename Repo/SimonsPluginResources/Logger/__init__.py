@@ -9,5 +9,4 @@ class Logger:
         logmessage:LogMessage = LogMessage(datetime.now().timestamp(), level, msg)
         print(logmessage)
 
-logger:Logger = Logger()
 DefaultLogLevels = DefaultLogLevels
