@@ -2,10 +2,13 @@ from fastapi import APIRouter, Request
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, RedirectResponse
 import os
+from SimonsPluginResources.environment import Environment
+from SimonsPluginResources.plugin import Status as Status
 
 templates = Jinja2Templates(directory=os.path.join(os.path.dirname(__file__), "static"))
 
 router = APIRouter(prefix="/visual")
+environment: Environment
 
 @router.get("/", response_class=RedirectResponse)
 async def main():
@@ -25,6 +28,7 @@ async def settings_interface(request: Request):
 
 @router.get("/plugins", response_class=HTMLResponse)
 async def plugin_interface(request: Request):
-    return templates.TemplateResponse("/plugins/plugin_page.j2", {"request": request})
+    plugins = environment.host.get_loaded_plugins()
+    return templates.TemplateResponse("/plugins/plugin_page.j2", {"request": request, "plugins":plugins, "Status" : Status})
 
 

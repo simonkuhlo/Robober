@@ -3,7 +3,7 @@ from fastapi.responses import RedirectResponse
 from threading import Thread
 from fastapi.staticfiles import StaticFiles
 from SimonsPluginResources.environment import Environment
-from .visual.main import router as visual_router
+from .visual import main as visual
 from .bot_api.main import router as bot_api_router
 from .bot_api import main as bot_api
 import uvicorn
@@ -19,7 +19,7 @@ static_dir_path = os.path.join(BASE_DIR, "visual/static")
 environment: Environment
 app = FastAPI()
 app.mount("/visual/static", StaticFiles(directory=static_dir_path), name="static")
-app.include_router(visual_router)
+app.include_router(visual.router)
 app.include_router(bot_api_router)
 
 @app.get("/")
@@ -50,5 +50,6 @@ def on_startup(current_environment: Environment) -> None:
     global environment
     environment = current_environment
     bot_api.environment = environment
+    visual.environment = environment
     api_thread = Thread(target=run_webinterface, daemon=True)
     api_thread.start()
