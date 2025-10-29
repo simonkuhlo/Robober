@@ -12,7 +12,6 @@ class WebInterfacePlugin(Plugin):
                          _used_host_version = 0,
                          _own_settings = {"webinterface.host_address" : "localhost"}
                          )
-
     def _start(self) -> None:
         main.on_startup(self.environment)
 

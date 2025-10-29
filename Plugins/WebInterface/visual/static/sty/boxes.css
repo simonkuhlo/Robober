@@ -14,3 +14,8 @@
     flex-direction: column;
     gap: 10px;
 }
+
+.center-v {
+    display: flex;
+    align-items: center;
+}

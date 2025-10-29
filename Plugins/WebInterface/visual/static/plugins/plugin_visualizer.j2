@@ -1,9 +1,25 @@
 <link rel="stylesheet" href="static/plugins/plugin_visualizer.css" />
 
-<div class="box-h" id="visualizer-container">
-    <p>Plugin Name</p>
+<div class="box-h {% if plugin.status == Status.STARTED %} info {% endif %}" id="visualizer-container">
+    <div class="center-v">
+        {% set start_button_message = "Start / Stop" %}
+        {% if plugin.status == Status.STARTED %}
+            🟢
+            {% set start_button_message = "⏹ Stop" %}
+        {% elif plugin.status == Status.STOPPED  %}
+            🔴
+            {% set start_button_message = "▶ Start" %}
+        {% elif plugin.status == Status.ERROR  %}
+            ⚠️
+            {% set start_button_message = "Restart" %}
+        {% else %}
+            ⚪
+            {% set start_button_message = "▶ Start" %}
+        {% endif %}
+    </div>
+    <p>{{ plugin.name }}</p>
     <div class="spacer-flex-h"></div>
-    <button>Configuration</button>
-    <button>Status</button>
-    <button>Start / Stop</button>
+    <button>View</button>
+    <button>{{ start_button_message }}</button>
+    <button><b>...</b></button>
 </div>
