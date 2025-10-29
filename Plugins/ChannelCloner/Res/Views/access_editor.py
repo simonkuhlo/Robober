@@ -1,6 +1,5 @@
 import discord
 from discord import VoiceChannel
-
 from .channel_access_view import ChannelAccessView
 from .user_limit_modal import UserLimitModal
 from ... import channel_authority_manager as cam

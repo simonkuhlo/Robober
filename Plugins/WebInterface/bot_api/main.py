@@ -1,28 +1,26 @@
 import asyncio
-
 from fastapi import APIRouter, Request
+from SimonsPluginResources.environment import Environment
 
-from SimonsPluginResources.Main.plugin_host import PluginHost
-from SimonsPluginResources.Main.plugin import Plugin
 router = APIRouter(prefix="/bot", tags=["api", "bot"])
-plugin_host:PluginHost
+environment:Environment
 
 @router.get("/start")
 async def start_bot(request: Request):
-    bot = plugin_host.access_share.bot
+    bot = environment.bot
     future = asyncio.run_coroutine_threadsafe(bot.start(), bot.loop)
     future.result()
     return {"message": "Bot started!"}
 
 @router.get("/stop")
 async def stop_bot(request: Request):
-    bot = plugin_host.access_share.bot
+    bot = environment.bot
     future = asyncio.run_coroutine_threadsafe(bot.close(), bot.loop)
     future.result()
     return {"message": "Bot stopped!"}
 
 @router.get("/clear")
 async def clear_bot(request: Request):
-    bot = plugin_host.access_share.bot
+    bot = environment.bot
     bot.clear()
     return {"message": "Bot restarted!"}

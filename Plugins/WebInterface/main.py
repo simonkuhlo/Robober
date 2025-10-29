@@ -2,9 +2,7 @@ from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 from threading import Thread
 from fastapi.staticfiles import StaticFiles
-from SimonsPluginResources.Main.plugin_host import PluginHost
-from SimonsPluginResources.Main.access_share import AccessShare
-from . import bot_api
+from SimonsPluginResources.environment import Environment
 from .visual.main import router as visual_router
 from .bot_api.main import router as bot_api_router
 from .bot_api import main as bot_api
@@ -18,7 +16,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 static_dir_path = os.path.join(BASE_DIR, "visual/static")
 
 # --- FastAPI Web Server Setup ---
-plugin_host:PluginHost
+environment: Environment
 app = FastAPI()
 app.mount("/visual/static", StaticFiles(directory=static_dir_path), name="static")
 app.include_router(visual_router)
@@ -30,7 +28,7 @@ async def read_root():
 
 @app.get("/bot-status")
 async def bot_status():
-    bot = plugin_host.access_share.bot
+    bot = environment.bot
     # Example: return the current bot latency
     return {"latency_ms": round(bot.latency * 1000)}
 
@@ -44,15 +42,13 @@ async def set_loglevel(update: int):
     core_settings.log_level = update
     return {"message": "Status updated", "new_status": core_settings.log_level}
 
-
 # Function to run the FastAPI server in a separate thread
-def run_api(current_plugin_host: PluginHost):
-    global plugin_host
-    plugin_host = current_plugin_host
-    bot_api.plugin_host = plugin_host
+def run_webinterface():
     uvicorn.run(app, host="localhost", port=8000)
 
-
-def on_startup() -> None:
-    api_thread = Thread(target=run_api, daemon=True)
+def on_startup(current_environment: Environment) -> None:
+    global environment
+    environment = current_environment
+    bot_api.environment = environment
+    api_thread = Thread(target=run_webinterface, daemon=True)
     api_thread.start()
