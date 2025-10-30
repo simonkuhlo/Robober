@@ -1,0 +1,11 @@
+#plugin-details-main {
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 500px;
+    flex-grow: 1;
+    border: 3px inset grey;
+    display: flex;
+    justify-items: center;
+    align-items: center;
+    justify-content: center;
+}

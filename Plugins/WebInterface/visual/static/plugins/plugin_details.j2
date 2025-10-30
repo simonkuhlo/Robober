@@ -1,0 +1,18 @@
+{% extends "base.j2" %}
+
+{% block main %}
+    <link rel="stylesheet" href="/visual/static/plugins/plugin_details.css" />
+    <h2>{{ plugin.name }}</h2>
+    <p>{{ plugin.description }}</p>
+    <div class="box-h navbar">
+        <div class="spacer-flex-h"></div>
+        <a class="button" href="/visual/plugins/{{ plugin.plugin_id }}/view">View</a>
+        <a class="button" href="/visual/plugins/{{ plugin.plugin_id }}/details">Details</a>
+        <a class="button" href="/visual/plugins/{{ plugin.plugin_id }}/integrations">Integrations</a>
+        <a class="button" href="/visual/plugins/{{ plugin.plugin_id }}/settings">Settings</a>
+        <a class="button" href="/visual/plugins/{{ plugin.plugin_id }}/logs">Logs</a>
+    </div>
+    <div id="plugin-details-main">
+        <p><i>Plugin has no view.</i></p>
+    </div>
+{% endblock %}
