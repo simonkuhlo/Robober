@@ -1,15 +1,11 @@
 .content-main {
     width: 100%;
     max-width: 750px;
-    justify-content: center;
-    align-content: center;
 }
 
 .content-frame {
     width: 100%;
+    box-sizing: border-box;
     display: flex;
     justify-content: center;
-    align-content: center;
-    justify-items: center;
-    align-items: center;
 }

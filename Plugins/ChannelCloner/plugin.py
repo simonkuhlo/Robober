@@ -7,7 +7,7 @@ class ChannelClonerPlugin(Plugin):
         super().__init__(_plugin_id = "CHANNELCLONER",
                          _environment= environment,
                          _name = "Channelcloner",
-                         _description = "Channelcloner",
+                         _description = "Enables normal members to create and customize their own temporary voice channels. Has integration for: Friend System, Webinterface, Event System",
                          _version = 0,
                          _used_host_version= 0,
                          _cogs = [ChannelCloner],
