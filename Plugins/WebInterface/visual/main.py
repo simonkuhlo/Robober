@@ -31,8 +31,4 @@ async def plugin_interface(request: Request):
     plugins = environment.host.get_loaded_plugins()
     return templates.TemplateResponse("/plugins/plugin_page.j2", {"request": request, "plugins":plugins, "Status" : Status})
 
-@router.get("/plugins/{plugin_id}", response_class=HTMLResponse)
-async def plugin_details(request: Request, plugin_id: str):
-    plugin = environment.host.get_plugin(plugin_id)
-    return templates.TemplateResponse("/plugins/plugin_details.j2", {"request": request, "plugin":plugin, "Status" : Status})
 
