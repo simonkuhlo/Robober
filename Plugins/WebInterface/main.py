@@ -7,7 +7,6 @@ from .visual import main as visual
 from .bot_api.main import router as bot_api_router
 from .bot_api import main as bot_api
 import uvicorn
-import core_settings
 import os
 
 # Get the directory where the current file (e.g., main.py) is located
@@ -25,22 +24,6 @@ app.include_router(bot_api_router)
 @app.get("/")
 async def read_root():
     return RedirectResponse(url="/visual", status_code=308)
-
-@app.get("/bot-status")
-async def bot_status():
-    bot = environment.bot
-    # Example: return the current bot latency
-    return {"latency_ms": round(bot.latency * 1000)}
-
-@app.get("/loglevel")
-async def get_status():
-    return core_settings.log_level
-
-@app.post("/loglevel")
-async def set_loglevel(update: int):
-    # Update the shared variable
-    core_settings.log_level = update
-    return {"message": "Status updated", "new_status": core_settings.log_level}
 
 # Function to run the FastAPI server in a separate thread
 def run_webinterface():
