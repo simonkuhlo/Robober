@@ -1,5 +1,5 @@
 from .reelbot import ReelBot
-from .settings import SettingsManager
+from .settings.settings_manager import SettingsManager
 from .Logger import Logger
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:

@@ -12,7 +12,8 @@ class PluginHost:
     def add_plugin(self, plugin: Plugin):
         self.loaded_plugins.append(plugin)
         for setting in plugin.own_settings.keys():
-            self.environment.settings.set_setting(setting, plugin.own_settings[setting])
+            #self.environment.settings.set_setting(setting, plugin.own_settings[setting])
+            pass
         plugin.start()
 
     def has_plugin(self, plugin_id: str, version:int = None) -> bool:

@@ -4,12 +4,14 @@ from .environment import Environment
 from .plugin_host import PluginHost
 from .settings import SettingsManager
 from .reelbot import ReelBot
+from .settings.setting import Setting
+
 
 class CoreApp:
-    def __init__(self):
-        self.settings = SettingsManager()
+    def __init__(self, initial_settings:list[Setting]):
+        self.settings = SettingsManager(initial_settings)
         self.logger = Logger()
-        self.bot = ReelBot(self.logger)
+        self.bot = ReelBot(self.logger, self.settings)
         self.bot.signal_ready.connect(self.on_bot_ready)
         self.environment = Environment(self.bot, self.settings, self.logger)
         self.plugin_host:PluginHost = PluginHost(self.environment)
