@@ -4,7 +4,7 @@ from .environment import Environment
 from .plugin_host import PluginHost
 from .settings import SettingsManager
 from .reelbot import ReelBot
-from .settings.setting import Setting
+from SimonsPluginResources.settings.setting import Setting
 
 
 class CoreApp:

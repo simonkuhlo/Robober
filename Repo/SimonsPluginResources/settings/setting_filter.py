@@ -1,4 +1,4 @@
-from .setting import Setting
+from SimonsPluginResources.settings.setting import Setting
 
 
 class SettingFilter:

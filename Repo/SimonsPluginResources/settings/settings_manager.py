@@ -1,4 +1,4 @@
-from .setting import Setting
+from SimonsPluginResources.settings.setting import Setting
 from .setting_filter import SettingFilter
 
 class SettingsManager:
@@ -10,7 +10,7 @@ class SettingsManager:
     def get_value_from_path(self, path:str):
         setting = self.settings.get(path)
         if setting:
-            return setting.get_value()
+            return setting.current_value
         return None
 
     def get_settings(self, settings_filter:SettingFilter) -> list[Setting]:
