@@ -1,5 +1,8 @@
 from SimonsPluginResources.environment import Environment
 from SimonsPluginResources.plugin import Plugin
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from SimonsPluginResources.plugin_host import HostPlugin
 from SimonsPluginResources.plugin_request import PluginRequest
 from SimonsPluginResources.settings.scopes import PluginScope
 from SimonsPluginResources.settings.setting import Setting
@@ -15,9 +18,10 @@ class WebInterfacePlugin(Plugin):
                          used_host_version = 0,
                          plugin_connections=[PluginRequest("HOST", 0, True)]
                          )
+        self.host_plugin: "HostPlugin" = None
 
     def _start(self) -> None:
-        main.on_startup(self.environment)
+        main.on_startup(self.environment, self.host_plugin)
 
     def get_settings(self) -> list[Setting]:
         return [
@@ -28,6 +32,11 @@ class WebInterfacePlugin(Plugin):
                     default_value="localhost",
                     )
         ]
+
+    def add_plugin_link(self, plugin:"Plugin") -> None:
+        super().add_plugin_link(plugin)
+        if plugin.name == "HOST":
+            self.host_plugin = plugin
 
 def get_plugin(environment: Environment):
     return WebInterfacePlugin(environment)
