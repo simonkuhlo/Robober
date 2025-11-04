@@ -13,8 +13,11 @@ class SettingsManager:
             return setting.current_value
         return None
 
-    def get_settings(self, settings_filter:SettingFilter) -> list[Setting]:
-        return settings_filter.filter_ist(list(self.settings.values()))
+    def get_settings(self, settings_filter:SettingFilter = None) -> list[Setting]:
+        if settings_filter:
+            return settings_filter.filter_ist(list(self.settings.values()))
+        else:
+            return list(self.settings.values())
 
     def import_setting(self, setting:Setting) -> None:
         self.settings[setting.get_path()] = setting

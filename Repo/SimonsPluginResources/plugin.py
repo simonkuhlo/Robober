@@ -95,6 +95,8 @@ class Plugin:
         return True
 
     def reload_cogs(self) -> None:
+        if not self.cogs:
+            return
         self.environment.logger.log(f"Reloading Cogs for Plugin: {self.name}", DefaultLogLevels.INFO)
         self.unload_cogs()
         self.load_cogs()
