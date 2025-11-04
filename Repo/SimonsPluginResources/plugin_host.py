@@ -1,20 +1,44 @@
 from .environment import Environment
 from .plugin import Plugin
+from .plugin_request import PluginRequest
+from .settings.setting import Setting
 
+class HostPlugin(Plugin):
+    def __init__(self, environment: Environment, host: "PluginHost"):
+        super().__init__(
+            plugin_id="HOST",
+            name="Host Plugin",
+            description="This plugin lets you interact with the connected plugin Host",
+            version=0,
+            used_host_version=1,
+            environment=environment,
+        )
+        self.host = host
+
+    def get_loaded_plugins(self) -> list[Plugin]:
+        return self.host.get_loaded_plugins()
 
 class PluginHost:
     def __init__(self, environment: Environment):
-        self.version: int = 0
+        self.version: int = 1
         self.environment: Environment = environment
-        self.environment.host = self
         self.loaded_plugins: list[Plugin] = []
 
+        host_plugin = HostPlugin(self.environment, self)
+        self.add_plugin(host_plugin)
+
     def add_plugin(self, plugin: Plugin):
+        self.environment.logger.log(f"Adding plugin {plugin.name}")
+        for request in plugin.requested_connections:
+            linked_plugin = self.get_plugin(request)
+            if linked_plugin:
+                plugin.add_plugin_link(linked_plugin)
+        self.environment.settings.import_list(plugin.get_settings())
         self.loaded_plugins.append(plugin)
-        for setting in plugin.own_settings.keys():
-            #self.environment.settings.set_setting(setting, plugin.own_settings[setting])
-            pass
-        plugin.start()
+        try:
+            plugin.start()
+        except Exception as e:
+            self.environment.logger.log(f"Failed to autostart plugin {plugin.name}. Try starting it manually or fixing dependencies: {e}")
 
     def has_plugin(self, plugin_id: str, version:int = None) -> bool:
         for plugin in self.loaded_plugins:
@@ -33,9 +57,9 @@ class PluginHost:
     def get_loaded_plugins(self) -> list[Plugin]:
         return self.loaded_plugins.copy()
 
-    def get_plugin(self, plugin_id: str) -> Plugin:
+    def get_plugin(self, plugin_request: PluginRequest) -> Plugin:
         for plugin in self.loaded_plugins:
-            if plugin.plugin_id == plugin_id:
+            if plugin.plugin_id == plugin_request.plugin_id:
                 return plugin
         return None
 

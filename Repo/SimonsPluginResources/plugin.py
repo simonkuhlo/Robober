@@ -4,7 +4,9 @@ from typing import final, Type
 from .Logger import DefaultLogLevels, Logger
 from .environment import Environment
 from .plugin_cog import PluginCog
+from .plugin_request import PluginRequest
 from .plugin_signal import Signal
+from .settings.setting import Setting
 
 
 class Status(enum.Enum):
@@ -15,32 +17,59 @@ class Status(enum.Enum):
 
 class Plugin:
     def __init__(self,
-                _plugin_id:str,
-                _environment:Environment,
-                _name:str = "Not set",
-                _description:str = "Not set",
-                _version:int = 0,
-                _used_host_version:int = 0,
-                _cogs: list[Type[PluginCog]] = [],
-                _own_settings: dict[str, str] = {},
+                plugin_id:str,
+                environment:Environment,
+                name:str = "Not set",
+                description:str = "Not set",
+                version:int = 0,
+                used_host_version:int = 0,
+                cogs: list[Type[PluginCog]] = [],
+                plugin_connections: list[PluginRequest] = [],
             ):
-        self.plugin_id: str = _plugin_id
-        self.name: str = _name
-        self.description: str = _description
-        self.version: int = _version
-        self.needs_backend_version: int = _used_host_version
-        self.cogs: list[Type[PluginCog]] = _cogs
-        self.own_settings: dict[str, str] = _own_settings
+        self.plugin_id: str = plugin_id
+        self.name: str = name
+        self.description: str = description
+        self.version: int = version
+        self.needs_backend_version: int = used_host_version
+        self.cogs: list[Type[PluginCog]] = cogs
+        self.requested_connections: list[PluginRequest] = plugin_connections
 
-        self.environment: Environment = _environment
+        self.environment: Environment = environment
+        self.plugin_links: dict[str, Plugin] = {}
 
         self.status: Status = Status.NOT_STARTED
         self.started:Signal = Signal()
         self.stopped:Signal = Signal()
 
+    def get_connection_requests(self, only_required:bool = False) -> list[PluginRequest]:
+        returned_requests = []
+        if only_required:
+            for request in self.requested_connections:
+                if not request.required:
+                    continue
+                returned_requests.append(request)
+        else:
+            returned_requests = self.requested_connections
+        return returned_requests
+
+    def get_settings(self) -> list[Setting]:
+        return []
+
+    def add_plugin_link(self, plugin:"Plugin") -> None:
+        self.plugin_links[plugin.plugin_id] = plugin
+
+    def remove_plugin_link(self, plugin:"Plugin") -> None:
+        self.plugin_links.pop(plugin.plugin_id, None)
+
     @final
     def start(self):
-        self._start()
+        for requested_connection in self.get_connection_requests(True):
+            if requested_connection.plugin_id not in self.plugin_links.keys():
+                raise Exception(f"Plugin {requested_connection.plugin_id} is required but not found in established links.")
+        try:
+            self._start()
+        except Exception as e:
+            raise Exception("Custom start script raised exception: ", e)
         if self.check_bot_ready():
             self.reload_cogs()
         self.status = Status.STARTED

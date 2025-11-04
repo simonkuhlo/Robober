@@ -19,6 +19,17 @@ class GlobalScope(Scope):
     def __str__(self):
         return f"{self.name}"
 
+class PluginScope(Scope):
+    def __init__(self, plugin_id: str):
+        super().__init__()
+        self.plugin_id:str = plugin_id
+
+    def set_meta(self) -> None:
+        self.name = "PLUGIN"
+
+    def __str__(self):
+        return f"{self.name}:{self.plugin_id}"
+
 class GuildScope(Scope):
     def __init__(self, guild_id: int):
         super().__init__()

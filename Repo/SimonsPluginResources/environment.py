@@ -11,4 +11,3 @@ class Environment:
         self.bot = bot
         self.settings = settings
         self.logger = logger
-        self.host: "PluginHost"
