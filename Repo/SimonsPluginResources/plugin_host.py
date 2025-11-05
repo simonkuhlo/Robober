@@ -18,6 +18,9 @@ class HostPlugin(Plugin):
     def get_loaded_plugins(self) -> list[Plugin]:
         return self.host.get_loaded_plugins()
 
+    def get_loaded_plugin(self, request: PluginRequest) -> Plugin:
+        return self.host.get_plugin(request)
+
 class PluginHost:
     def __init__(self, environment: Environment):
         self.version: int = 1
@@ -33,7 +36,9 @@ class PluginHost:
             linked_plugin = self.get_plugin(request)
             if linked_plugin:
                 plugin.add_plugin_link(linked_plugin)
-        self.environment.settings.import_list(plugin.get_settings())
+        for setting in plugin.get_settings():
+            setting.source = f"PLUGIN:{plugin.plugin_id}"
+            self.environment.settings.import_setting(setting)
         self.loaded_plugins.append(plugin)
         try:
             plugin.start()

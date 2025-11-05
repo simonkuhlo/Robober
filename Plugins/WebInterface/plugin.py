@@ -21,7 +21,7 @@ class WebInterfacePlugin(Plugin):
         self.host_plugin: "HostPlugin" = None
 
     def _start(self) -> None:
-        main.on_startup(self.environment, self.host_plugin)
+        main.on_startup(self)
 
     def get_settings(self) -> list[Setting]:
         return [
@@ -35,7 +35,7 @@ class WebInterfacePlugin(Plugin):
 
     def add_plugin_link(self, plugin:"Plugin") -> None:
         super().add_plugin_link(plugin)
-        if plugin.name == "HOST":
+        if plugin.plugin_id == "HOST":
             self.host_plugin = plugin
 
 def get_plugin(environment: Environment):
