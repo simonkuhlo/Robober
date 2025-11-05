@@ -40,4 +40,4 @@ class Setting:
             self.current_value_str = self.type_filter.to_string(value)
 
     def get_path(self) -> str:
-        return f"{str(self.source)}.{self.topic}.{self.setting_id}"
+        return f"{str(self.scope)}:{self.topic}.{self.setting_id}"
