@@ -8,14 +8,14 @@ from SimonsPluginResources.settings.setting import Setting
 
 
 class CoreApp:
-    def __init__(self, initial_settings:list[Setting]):
+    def __init__(self, token: str, initial_settings:list[Setting] | None = None):
         self.settings = SettingsManager(initial_settings)
         self.logger = Logger()
         self.bot = ReelBot(self.logger, self.settings)
         self.bot.signal_ready.connect(self.on_bot_ready)
         self.environment = Environment(self.bot, self.settings, self.logger)
         self.plugin_host:PluginHost = PluginHost(self.environment)
-        self.bot_token: str = None
+        self.bot_token: str = token
         self.bot_thread:Thread = Thread(target=self.run_bot, daemon=True)
 
     def on_bot_ready(self):
@@ -32,7 +32,7 @@ class CoreApp:
                 case "/quit":
                     print("Exiting...")
                     break
-                case "/status bot":
+                case "/status bot_thread":
                     print("Bot status: ", self.bot_thread.is_alive())
                 case "/plugins reload_cogs":
                     self.plugin_host.reload_cogs()

@@ -13,11 +13,9 @@ class Setting:
                  important: bool = True,
                  default_value: str = "",
                  current_value = None,
-                 source: str = "UNKNOWN",
                  ):
         self.category: str = category
         self.scope: Scope = scope
-        self.source: str = source
         self.topic: str = topic
         self.setting_id: str = setting_id
         self.description: str = description

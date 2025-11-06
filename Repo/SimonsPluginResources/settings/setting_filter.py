@@ -21,15 +21,6 @@ class SettingPathFilter:
             return True
         return False
 
-class SettingSourceNameFilter:
-    def __init__(self, source_name: str):
-        self.source_name: str = source_name
-
-    def filter(self, setting: Setting) -> bool:
-        if setting.source.name == self.source_name:
-            return True
-        return False
-
 class SettingCategoryFilter:
     def __init__(self, category: str):
         self.category: str = category
