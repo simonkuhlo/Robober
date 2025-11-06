@@ -1,5 +1,7 @@
 from .environment import Environment
+from .logging.log_message_factory import LogMessageFactory
 from .plugin import Plugin
+from .logging.sources import LogMessageSource
 from .plugin_request import PluginRequest
 from .settings.setting import Setting
 
@@ -26,24 +28,26 @@ class PluginHost:
         self.version: int = 1
         self.environment: Environment = environment
         self.loaded_plugins: list[Plugin] = []
+        logging_source: LogMessageSource = LogMessageSource("[Plugin Host]", "Core/PluginHost")
+        self.log_factory: LogMessageFactory = LogMessageFactory(logger=self.environment.logger, source=logging_source)
 
         host_plugin = HostPlugin(self.environment, self)
         self.add_plugin(host_plugin)
 
+
     def add_plugin(self, plugin: Plugin):
-        self.environment.logger.log(f"Adding plugin {plugin.name}")
+        self.log_factory.log(f"Adding plugin {plugin.name}")
         for request in plugin.requested_connections:
             linked_plugin = self.get_plugin(request)
             if linked_plugin:
                 plugin.add_plugin_link(linked_plugin)
         for setting in plugin.get_settings():
-            setting.source = f"PLUGIN:{plugin.plugin_id}"
             self.environment.settings.import_setting(setting)
         self.loaded_plugins.append(plugin)
         try:
             plugin.start()
         except Exception as e:
-            self.environment.logger.log(f"Failed to autostart plugin {plugin.name}. Try starting it manually or fixing dependencies: {e}")
+            self.log_factory.log(f"Failed to autostart plugin {plugin.name}. Try starting it manually or fixing dependencies: {e}")
 
     def has_plugin(self, plugin_id: str, version:int = None) -> bool:
         for plugin in self.loaded_plugins:

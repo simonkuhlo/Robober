@@ -1,6 +1,11 @@
 import discord
-from SimonsPluginResources.Logger import Logger, DefaultLogLevels, color_templates as colors
 from discord.ext import commands
+
+from .logging import color_templates as colors
+from .logging.logger import Logger
+from .logging.sources import LogMessageSource
+from .logging.log_message_factory import LogMessageFactory
+
 from .plugin_signal import Signal
 from .settings import SettingsManager
 
@@ -10,7 +15,8 @@ class ReelBot(commands.Bot):
         intents = discord.Intents.all()
         intents.message_content = True
         self.settings:SettingsManager = settings
-        self.logger = logger
+        logging_source = LogMessageSource("[ReelBot]", "Bot")
+        self.log_factory = LogMessageFactory(logger, logging_source)
         self.signal_setup:Signal = Signal()
         self.signal_ready:Signal = Signal()
         super().__init__(command_prefix=commands.when_mentioned_or(self.settings.get_value_from_path("CORE.commands.trigger")), intents=intents)
@@ -25,4 +31,4 @@ class ReelBot(commands.Bot):
     async def on_ready(self):
         self.signal_ready.emit()
         message = colors.success('LOGGED IN')+' as '+colors.highlight(f"{self.user}")+f' (ID: {self.user.id})'
-        self.logger.log(message, DefaultLogLevels.INFO)
+        self.log_factory.log(message)

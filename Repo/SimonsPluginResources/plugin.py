@@ -1,7 +1,11 @@
 import asyncio
 import enum
 from typing import final, Type
-from .Logger import DefaultLogLevels, Logger
+
+from .logging.log_message_factory import LogMessageFactory
+from .logging.logger import Logger
+from .logging.loglevel import DefaultLogLevels
+from .logging.sources import PluginLogMessageSource
 from .environment import Environment
 from .plugin_cog import PluginCog
 from .plugin_request import PluginRequest
@@ -35,6 +39,7 @@ class Plugin:
         self.requested_connections: list[PluginRequest] = plugin_connections
 
         self.environment: Environment = environment
+        self.log_factory: LogMessageFactory = LogMessageFactory(self.environment.logger, PluginLogMessageSource(self))
         self.plugin_links: dict[str, Plugin] = {}
 
         self.status: Status = Status.NOT_STARTED
@@ -97,7 +102,7 @@ class Plugin:
     def reload_cogs(self) -> None:
         if not self.cogs:
             return
-        self.environment.logger.log(f"Reloading Cogs for Plugin: {self.name}", DefaultLogLevels.INFO)
+        self.log_factory.log(f"Reloading Cogs for Plugin: {self.name}")
         self.unload_cogs()
         self.load_cogs()
 
@@ -108,9 +113,9 @@ class Plugin:
                 future = asyncio.run_coroutine_threadsafe(bot.remove_cog(cog_name), bot.loop)
                 future.result(timeout=3)
         except TimeoutError:
-            self.environment.logger.log(f"Error while reloading Cog: Asyncio Timeout", DefaultLogLevels.INFO)
+            self.log_factory.log(f"Error while reloading Cog: Asyncio Timeout")
         except Exception as e:
-            self.environment.logger.log(f"Error while reloading Cog: {e}", DefaultLogLevels.INFO)
+            self.log_factory.log(f"Error while reloading Cog: {e}")
 
 
     def load_cogs(self) -> None:
@@ -120,7 +125,7 @@ class Plugin:
             if not self.environment.bot.is_ready():
                 raise Exception("Bot is not ready.")
         except Exception as e:
-            self.environment.logger.log(f"Loading Cogs could not be started: {self.name}: {e}", DefaultLogLevels.INFO)
+            self.log_factory.log(f"Loading Cogs could not be started: {self.name}: {e}")
             return
         bot = self.environment.bot
         for CogObject in self.cogs:
@@ -129,6 +134,6 @@ class Plugin:
                 future = asyncio.run_coroutine_threadsafe(bot.add_cog(cog_instance), bot.loop)
                 future.result(timeout=3)
             except TimeoutError:
-                self.environment.logger.log(f"Error while reloading Cog: Asyncio Timeout", DefaultLogLevels.INFO)
+                self.log_factory.log(f"Error while reloading Cog: Asyncio Timeout")
             except Exception as e:
-                self.environment.logger.log(f"Error while reloading Cog: {e}", DefaultLogLevels.INFO)
+                self.log_factory.log(f"Error while reloading Cog: {e}")
