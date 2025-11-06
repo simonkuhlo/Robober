@@ -1,4 +1,4 @@
-from ...res import LogMessage
+from SimonsPluginResources.Logger.log_message import LogMessage
 
 class LogMessageFilter:
     def filter(message:LogMessage) -> bool:

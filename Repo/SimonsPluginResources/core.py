@@ -1,5 +1,5 @@
 from threading import Thread
-from .Logger import Logger
+from .logging.logger import Logger
 from .environment import Environment
 from .plugin_host import PluginHost
 from .settings import SettingsManager

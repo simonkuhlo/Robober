@@ -1,4 +1,4 @@
-from ..res import LogMessage
+from ..log_message import LogMessage
 
 class SaveStrategy:
     filters:list = []

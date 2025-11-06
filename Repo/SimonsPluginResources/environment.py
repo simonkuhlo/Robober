@@ -1,10 +1,6 @@
 from .reelbot import ReelBot
 from .settings.settings_manager import SettingsManager
-from .Logger import Logger
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    from .plugin_host import PluginHost
-
+from .logging.logger import Logger
 
 class Environment:
     def __init__(self, bot: ReelBot, settings: SettingsManager, logger: Logger):
