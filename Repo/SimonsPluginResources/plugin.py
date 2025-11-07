@@ -1,7 +1,6 @@
 import asyncio
 import enum
 from typing import final, Type
-
 from .logging.log_message_factory import LogMessageFactory
 from .logging.logger import Logger
 from .logging.loglevel import DefaultLogLevels
@@ -10,14 +9,9 @@ from .environment import Environment
 from .plugin_cog import PluginCog
 from .plugin_request import PluginRequest
 from .plugin_signal import Signal
+from .plugin_status import Status
 from .settings.setting import Setting
-
-
-class Status(enum.Enum):
-    NOT_STARTED = 0
-    STARTED = 1
-    STOPPED = 2
-    ERROR = 3
+from .plugin_extension import PluginExtension
 
 class Plugin:
     def __init__(self,
@@ -41,6 +35,7 @@ class Plugin:
         self.environment: Environment = environment
         self.log_factory: LogMessageFactory = LogMessageFactory(self.environment.logger, PluginLogMessageSource(self))
         self.plugin_links: dict[str, Plugin] = {}
+        self.loaded_extensions: list[PluginExtension] = []
 
         self.status: Status = Status.NOT_STARTED
         self.started:Signal = Signal()
@@ -59,6 +54,10 @@ class Plugin:
 
     def get_settings(self) -> list[Setting]:
         return []
+
+    def add_plugin_extension(self, extension: PluginExtension) -> None:
+        extension.set_parent_plugin(self)
+        self.loaded_extensions.append(extension)
 
     def add_plugin_link(self, plugin:"Plugin") -> None:
         self.plugin_links[plugin.plugin_id] = plugin
@@ -130,7 +129,7 @@ class Plugin:
         bot = self.environment.bot
         for CogObject in self.cogs:
             try:
-                cog_instance = CogObject(self.environment)
+                cog_instance = CogObject(self)
                 future = asyncio.run_coroutine_threadsafe(bot.add_cog(cog_instance), bot.loop)
                 future.result(timeout=3)
             except TimeoutError:
