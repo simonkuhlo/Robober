@@ -6,7 +6,7 @@ if TYPE_CHECKING:
 from SimonsPluginResources.plugin_request import PluginRequest
 from SimonsPluginResources.settings.scopes import PluginScope
 from SimonsPluginResources.settings.setting import Setting
-from . import main
+from .main import WebInterfacePluginExtension
 
 class WebInterfacePlugin(Plugin):
     def __init__(self, environment: Environment):
@@ -19,9 +19,7 @@ class WebInterfacePlugin(Plugin):
                          plugin_connections=[PluginRequest("HOST", 0, True)]
                          )
         self.host_plugin: "HostPlugin" = None
-
-    def _start(self) -> None:
-        main.on_startup(self)
+        self.add_plugin_extension(WebInterfacePluginExtension())
 
     def get_settings(self) -> list[Setting]:
         return [
