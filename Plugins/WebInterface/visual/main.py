@@ -58,3 +58,21 @@ async def plugin_view(request: Request, plugin_id: str):
     target_file_path = f"{rel_path}/External/WebInterface"
     temp_templates = Jinja2Templates(target_file_path)
     return temp_templates.TemplateResponse("view.j2", {"request": request, "plugin" : plugin})
+
+@router.get("/plugins/{plugin_id}/plugin_settings", response_class=HTMLResponse)
+async def plugin_settings(request: Request, plugin_id: str):
+    global extension
+    plugin = extension.parent_plugin.host_plugin.get_loaded_plugin(PluginRequest(plugin_id))
+    return templates.TemplateResponse("plugins/plugin_settings.j2", {"request": request, "plugin" : plugin})
+
+@router.get("/plugins/{plugin_id}/plugin_integrations", response_class=HTMLResponse)
+async def plugin_integrations(request: Request, plugin_id: str):
+    global extension
+    plugin = extension.parent_plugin.host_plugin.get_loaded_plugin(PluginRequest(plugin_id))
+    return templates.TemplateResponse("plugins/plugin_integrations.j2", {"request": request, "plugin" : plugin})
+
+@router.get("/plugins/{plugin_id}/plugin_logs", response_class=HTMLResponse)
+async def plugin_logs(request: Request, plugin_id: str):
+    global extension
+    plugin = extension.parent_plugin.host_plugin.get_loaded_plugin(PluginRequest(plugin_id))
+    return templates.TemplateResponse("plugins/plugin_logs.j2", {"request": request, "plugin" : plugin})
