@@ -1,5 +1,7 @@
 import asyncio
 import enum
+import os
+import sys
 from typing import final, Type
 from .logging.log_message_factory import LogMessageFactory
 from .logging.logger import Logger
@@ -12,6 +14,8 @@ from .plugin_signal import Signal
 from .plugin_status import Status
 from .settings.setting import Setting
 from .plugin_extension import PluginExtension
+from .webinterface_extension import WebinterfaceExtension
+
 
 class Plugin:
     def __init__(self,
@@ -30,6 +34,7 @@ class Plugin:
         self.version: int = version
         self.needs_backend_version: int = used_host_version
         self.cogs: list[Type[PluginCog]] = cogs
+        self.webinterface_extension: WebinterfaceExtension = None
         self.requested_connections: list[PluginRequest] = plugin_connections
 
         self.environment: Environment = environment
@@ -40,6 +45,9 @@ class Plugin:
         self.status: Status = Status.NOT_STARTED
         self.started:Signal = Signal()
         self.stopped:Signal = Signal()
+
+    def get_module_path(self) -> str:
+        return os.path.dirname(sys.modules[self.__class__.__module__].__file__)
 
     def get_connection_requests(self, only_required:bool = False) -> list[PluginRequest]:
         returned_requests = []

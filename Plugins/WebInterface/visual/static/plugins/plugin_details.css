@@ -5,6 +5,7 @@
     flex-grow: 1;
     border: 3px inset grey;
     display: flex;
+    flex-direction: column;
     justify-items: center;
     align-items: center;
     justify-content: center;

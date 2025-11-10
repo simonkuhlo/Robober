@@ -1,5 +1,3 @@
-from distutils.extension import Extension
-
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 from threading import Thread

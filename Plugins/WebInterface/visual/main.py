@@ -41,11 +41,20 @@ async def settings_interface(request: Request):
 async def plugin_interface(request: Request):
     global extension
     plugins = extension.parent_plugin.host_plugin.get_loaded_plugins()
-    return templates.TemplateResponse("/plugins/plugin_page.j2", {"request": request, "plugins":plugins, "Status" : Status})
+    return templates.TemplateResponse("/plugins/plugin_list.j2", {"request": request, "plugins":plugins, "Status" : Status})
 
 @router.get("/plugins/{plugin_id}", response_class=HTMLResponse)
 async def plugin_details(request: Request, plugin_id: str):
     global extension
     plugin = extension.parent_plugin.host_plugin.get_loaded_plugin(PluginRequest(plugin_id))
-    return templates.TemplateResponse("/plugins/plugin_details.j2", {"request": request, "plugin":plugin, "Status" : Status})
+    return templates.TemplateResponse("plugins/plugin_inspector.j2", {"request": request, "plugin":plugin, "Status" : Status})
 
+@router.get("/plugins/{plugin_id}/plugin_view", response_class=HTMLResponse)
+async def plugin_view(request: Request, plugin_id: str):
+    global extension
+    plugin = extension.parent_plugin.host_plugin.get_loaded_plugin(PluginRequest(plugin_id))
+    module_path = plugin.get_module_path()
+    rel_path = os.path.abspath(module_path)
+    target_file_path = f"{rel_path}/External/WebInterface"
+    temp_templates = Jinja2Templates(target_file_path)
+    return temp_templates.TemplateResponse("view.j2", {"request": request, "plugin" : plugin})

@@ -30,3 +30,6 @@ def is_user_owner(channel_id:int, user_id:int) -> bool:
     if not authority:
         return False
     return authority.is_owner(user_id)
+
+def get_active_channel_ids() -> list[int]:
+    return list(saved_authorities.keys())

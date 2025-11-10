@@ -5,6 +5,11 @@
     /*justify-content: center;*/
 }
 
+.flex-center-v {
+    justify-items: center;
+    align-items: center;
+}
+
 .spacer-flex-h {
     flex-grow: 1;
 }
