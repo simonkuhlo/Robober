@@ -4,6 +4,7 @@ from SimonsPluginResources.settings.setting import Setting
 from SimonsPluginResources.settings.scopes import PluginScope
 from SimonsPluginResources.settings.type_filters import filters
 from .cog import ChannelCloner
+from . import channel_authority_manager
 
 class ChannelClonerPlugin(Plugin):
     def __init__(self, environment: Environment):
@@ -34,6 +35,9 @@ class ChannelClonerPlugin(Plugin):
 
     def get_settings(self) -> list[Setting]:
         return [self.origin_channel_setting, self.temp_category_setting]
+
+    def get_active_channel_ids(self) -> list[int]:
+        return channel_authority_manager.get_active_channel_ids()
 
 def get_plugin(environment: Environment) -> Plugin:
     return ChannelClonerPlugin(environment)
