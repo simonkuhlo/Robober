@@ -1,7 +1,7 @@
 {% extends "base.j2" %}
 
 {% block main %}
-    <link rel="stylesheet" href="/visual/static/plugins/plugin_details.css" />
+    <link rel="stylesheet" href="/static/sty/plugin_details.css" />
     <div class="box-h flex-center-v">
 <div class="center-v">
         {% set start_button_message = "Start / Stop" %}
@@ -27,10 +27,10 @@
     <p>{{ plugin.description }}</p>
     <div class="box-h navbar">
         <div class="spacer-flex-h"></div>
-        <button class="button" onclick=update_inner("/visual/plugins/{{ plugin.plugin_id }}/plugin_view")>View</button>
-        <button class="button" onclick=update_inner("/visual/plugins/{{ plugin.plugin_id }}/plugin_integrations")>Integrations</button>
-        <button class="button" onclick=update_inner("/visual/plugins/{{ plugin.plugin_id }}/plugin_settings")>Settings</button>
-        <button class="button" onclick=update_inner("/visual/plugins/{{ plugin.plugin_id }}/plugin_logs")>Logs</button>
+        <button class="button" onclick=update_inner("/plugins/{{ plugin.plugin_id }}/plugin_view")>View</button>
+        <button class="button" onclick=update_inner("/plugins/{{ plugin.plugin_id }}/plugin_integrations")>Integrations</button>
+        <button class="button" onclick=update_inner("/plugins/{{ plugin.plugin_id }}/plugin_settings")>Settings</button>
+        <button class="button" onclick=update_inner("/plugins/{{ plugin.plugin_id }}/plugin_logs")>Logs</button>
     </div>
     <div id="plugin-details-main">
         <p><i>Plugin has no view.</i></p>
@@ -41,6 +41,6 @@
         .then(response => response.text())
         .then(data => { document.getElementById("plugin-details-main").innerHTML = data });
     }
-    update_inner("/visual/plugins/{{ plugin.plugin_id }}/plugin_view")
+    update_inner("/plugins/{{ plugin.plugin_id }}/plugin_view")
    </script>
 {% endblock %}

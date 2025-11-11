@@ -19,7 +19,7 @@ class WebInterfacePlugin(Plugin):
                          plugin_connections=[PluginRequest("HOST", 0, True)]
                          )
         self.host_plugin: "HostPlugin" = None
-        self.add_plugin_extension(WebInterfacePluginExtension())
+        self.add_plugin_extension(WebInterfacePluginExtension(self))
 
     def get_settings(self) -> list[Setting]:
         return [
