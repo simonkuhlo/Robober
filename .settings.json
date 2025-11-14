@@ -3,6 +3,8 @@
         "rel_path": "logging.level",
         "default_value": "0",
         "current_value": null,
+        "description": null,
+        "comment": null,
         "scope": {
             "type": "Global"
         }
@@ -11,6 +13,8 @@
         "rel_path": "debug_guild.id",
         "default_value": "954128852051968070",
         "current_value": null,
+        "description": null,
+        "comment": "Bot must be restarted after changing value!",
         "scope": {
             "type": "Global"
         }
@@ -19,6 +23,8 @@
         "rel_path": "commands.trigger",
         "default_value": "!r",
         "current_value": null,
+        "description": null,
+        "comment": "Bot must be restarted after changing value!",
         "scope": {
             "type": "Global"
         }
@@ -27,6 +33,8 @@
         "rel_path": "origin_channel.id",
         "default_value": "963376060672647169",
         "current_value": null,
+        "description": null,
+        "comment": null,
         "scope": {
             "type": "Plugin",
             "plugin_id": "CHANNELCLONER"
@@ -36,6 +44,8 @@
         "rel_path": "temp_category.id",
         "default_value": "1361792521226948650",
         "current_value": null,
+        "description": null,
+        "comment": null,
         "scope": {
             "type": "Plugin",
             "plugin_id": "CHANNELCLONER"
@@ -45,6 +55,8 @@
         "rel_path": "host_address",
         "default_value": "localhost",
         "current_value": null,
+        "description": null,
+        "comment": "Webinterface must be restarted after changing value!",
         "scope": {
             "type": "Plugin",
             "plugin_id": "WEBINTERFACE"
@@ -54,6 +66,8 @@
         "rel_path": "port",
         "default_value": "8080",
         "current_value": null,
+        "description": null,
+        "comment": "Webinterface must be restarted after changing value!",
         "scope": {
             "type": "Plugin",
             "plugin_id": "WEBINTERFACE"
