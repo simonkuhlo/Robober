@@ -1,0 +1,62 @@
+{
+    "Global.logging.level": {
+        "rel_path": "logging.level",
+        "default_value": "0",
+        "current_value": null,
+        "scope": {
+            "type": "Global"
+        }
+    },
+    "Global.debug_guild.id": {
+        "rel_path": "debug_guild.id",
+        "default_value": "954128852051968070",
+        "current_value": null,
+        "scope": {
+            "type": "Global"
+        }
+    },
+    "Global.commands.trigger": {
+        "rel_path": "commands.trigger",
+        "default_value": "!r",
+        "current_value": null,
+        "scope": {
+            "type": "Global"
+        }
+    },
+    "Plugin.CHANNELCLONER.origin_channel.id": {
+        "rel_path": "origin_channel.id",
+        "default_value": "963376060672647169",
+        "current_value": null,
+        "scope": {
+            "type": "Plugin",
+            "plugin_id": "CHANNELCLONER"
+        }
+    },
+    "Plugin.CHANNELCLONER.temp_category.id": {
+        "rel_path": "temp_category.id",
+        "default_value": "1361792521226948650",
+        "current_value": null,
+        "scope": {
+            "type": "Plugin",
+            "plugin_id": "CHANNELCLONER"
+        }
+    },
+    "Plugin.WEBINTERFACE.host_address": {
+        "rel_path": "host_address",
+        "default_value": "localhost",
+        "current_value": null,
+        "scope": {
+            "type": "Plugin",
+            "plugin_id": "WEBINTERFACE"
+        }
+    },
+    "Plugin.WEBINTERFACE.port": {
+        "rel_path": "port",
+        "default_value": "8080",
+        "current_value": null,
+        "scope": {
+            "type": "Plugin",
+            "plugin_id": "WEBINTERFACE"
+        }
+    }
+}
