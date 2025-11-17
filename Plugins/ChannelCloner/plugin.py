@@ -1,29 +1,34 @@
-from SimonsPluginResources.environment import Environment
-from SimonsPluginResources.plugin import Plugin
+from typing import Optional, TYPE_CHECKING, Type
+from discord.ext import commands
+from SimonsPluginResources.asyncio_task_wrapper import AsyncTask
+from SimonsPluginResources.plugin import Plugin, PluginMeta
 from SimonsPluginResources.settings import Setting
 from SimonsPluginResources.settings.models.scope import ScopePlugin
 from .cog import ChannelCloner
-from . import channel_authority_manager
+if TYPE_CHECKING:
+    from SimonsPluginResources.plugin_host import PluginHost
+
+class ChannelClonerPluginMeta(PluginMeta):
+    def __init__(self):
+        super().__init__(plugin_id = "channelcloner")
+        self.name = "Channel cloner"
+        self.description = "No description provided"
+        self.version = 2
+        self.used_backend_version = 10
+        self.connection_requests = None
+        self.settings = [
+            Setting(rel_path="origin_channel.id", default_value="963376060672647169", scope=ScopePlugin(plugin_id=self.plugin_id)),
+            Setting(rel_path="temp_category.id", default_value="1361792521226948650", scope=ScopePlugin(plugin_id=self.plugin_id)),
+        ]
 
 class ChannelClonerPlugin(Plugin):
-    def __init__(self, environment: Environment):
-        super().__init__(plugin_id = "CHANNELCLONER",
-                         environment= environment,
-                         name = "Channelcloner",
-                         description = "Enables normal members to create and customize their own temporary voice channels. Has integration for: Friend System, Webinterface, Event System",
-                         version = 0,
-                         used_host_version= 0,
-                         cogs = [ChannelCloner],
-                         )
+    def __init__(self, host: "PluginHost"):
+        super().__init__(host, ChannelClonerPluginMeta())
 
-    def get_settings(self) -> list[Setting]:
-        return [
-                Setting(rel_path="origin_channel.id", default_value="963376060672647169", scope=ScopePlugin(plugin_id=self.plugin_id)),
-                Setting(rel_path="temp_category.id", default_value="1361792521226948650", scope=ScopePlugin(plugin_id=self.plugin_id)),
-                ]
+    @property
+    def tasks(self) -> Optional[list[AsyncTask]]:
+        return
 
-    def get_active_channel_ids(self) -> list[int]:
-        return channel_authority_manager.get_active_channel_ids()
-
-def get_plugin(environment: Environment) -> Plugin:
-    return ChannelClonerPlugin(environment)
+    @property
+    def cogs(self) -> Optional[list[Type[commands.Cog]]]:
+        return [ChannelCloner]

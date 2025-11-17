@@ -1,14 +1,15 @@
 from discord import VoiceChannel
 from discord.ext import commands
 from SimonsPluginResources.environment import Environment
+from SimonsPluginResources.plugin import Plugin
 from SimonsPluginResources.plugin_cog import PluginCog
 from .Res.channel_authority import ChannelAuthority
 from .Res.Views.access_editor import ChannelEditorView
 from . import channel_authority_manager as cam
 
 class ChannelCloner(PluginCog):
-    def __init__(self, environment: Environment):
-        super().__init__(environment)
+    def __init__(self, parent_plugin: "Plugin"):
+        super().__init__(parent_plugin)
 
     @commands.hybrid_command()
     async def hello(self, ctx):
@@ -17,10 +18,10 @@ class ChannelCloner(PluginCog):
     @commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):
         try:
-            origin_channel_id:int = self.environment.settings.get_value_from_path("PLUGIN:CHANNELCLONER:origin_channel.id")
+            origin_channel_id:int = int(self.environment.settings.get_value("Plugin.channelcloner.origin_channel.id"))
             if not origin_channel_id:
                 raise Exception("origin_channel_id is not set")
-            temp_channel_category_id:int = self.environment.settings.get_value_from_path("PLUGIN:CHANNELCLONER:temp_channel_category.id")
+            temp_channel_category_id:int = int(self.environment.settings.get_value("Plugin.channelcloner.temp_category.id"))
             if not temp_channel_category_id:
                 raise Exception("temp_channel_category_id is not set")
             if before.channel is not None:
