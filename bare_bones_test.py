@@ -3,7 +3,7 @@ from dotenv import get_key
 from SimonsPluginResources.asyncio_task_wrapper import AsyncTask
 from SimonsPluginResources.reelbot import ReelBot
 from SimonsPluginResources.settings import SettingsManager, SimpleSettingsManager
-from WebInterface import plugin2
+from WebInterface.plugin import WebInterfacePlugin
 from Plugins.ChannelCloner.plugin import ChannelClonerPlugin
 from SimonsPluginResources.plugin_host import PluginHost
 from SimonsPluginResources.task_manager import AsyncTaskManager
@@ -19,7 +19,7 @@ async def main():
     env: Environment = Environment(settings, logger, task_manager, bot)
     plugin_host: PluginHost = PluginHost(env)
     task_manager.add_task(AsyncTask(bot.start, args=(get_key(".env", "BOT_TOKEN"),), name="Bot main loop"))
-    await plugin_host.add_plugin(plugin2.WebInterfacePlugin)
+    await plugin_host.add_plugin(WebInterfacePlugin)
     await plugin_host.add_plugin(ChannelClonerPlugin)
     await task_manager.start()
 
